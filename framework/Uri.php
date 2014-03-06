@@ -17,6 +17,8 @@ class frm_Uri extends frm_Baseobject{
             $this->controllername = strtolower($request_uri[1]) == 'index.php' ? 'IndexController' : ucfirst($request_uri[1]).'Controller';
             $this->actionname = empty($request_uri[2]) ? 'indexAction' : $request_uri[2] . 'Action';
         }
+        frm_Request::setVar('controllername', $this->controllername, 'system');
+        frm_Request::setVar('actionname', $this->actionname, 'system');
         //note 处理path
         if(count($request_uri) > 2){
             $urlargs = array();
@@ -35,8 +37,6 @@ class frm_Uri extends frm_Baseobject{
             $controlClass = new ReflectionClass ( 'app_controller_' . $this->controllername );
             $controllerObj = $controlClass->newInstance();
             if(method_exists($controllerObj, $this->actionname)){
-                frm_Request::setVar('controllername', $this->controllername, 'system');
-                frm_Request::setVar('actionname', $this->actionname, 'system');
                 return $controllerObj;
             }else{
                 exit("控制器{$this->controllername}的{$this->actionname}不存在！");

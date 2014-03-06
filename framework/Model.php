@@ -29,12 +29,14 @@ class frm_Model extends frm_Baseobject{
         return $query_db->get($this->tablename, $fields, $where);
     }
 
-    public function has($where){
-        return $this->slavedb->has($this->tablename, $where);
+    public function has($where, $master = false){
+        $query_db = $master ? $this->masterdb : $this->slavedb;
+        return $query_db->has($this->tablename, $where);
     }
 
-    public function count($where){
-        return $this->slavedb->count($this->tablename, $where);
+    public function count($where, $master = false){
+        $query_db = $master ? $this->masterdb : $this->slavedb;
+        return $query_db->count($this->tablename, $where);
     }
 
     public function query($sql, $master = false){
