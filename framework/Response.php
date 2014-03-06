@@ -1,5 +1,4 @@
 <?php
-
 class frm_Response extends frm_Baseobject{
     private static $reponse = array();
 

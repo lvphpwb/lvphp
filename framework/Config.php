@@ -1,12 +1,11 @@
 <?php
-
 class frm_Config extends frm_Baseobject{
     private static $conf = array();
 
 	static function load(){
 		$conffile = APP_PATH . '/application/config/config.php';
 		if(file_exists($conffile)){
-			require_once $conffile;
+			include $conffile;
 			self::$conf = $systemconfig;
 		}
 	}

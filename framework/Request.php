@@ -1,7 +1,7 @@
 <?php
 class frm_Request extends frm_Baseobject{
 	private static $system = array ();
-    
+
 	static public function getVar($name, $hash = 'default', $default = null) {
 		$hash = strtoupper ( $hash );
 		$hash === 'METHOD' && $hash = strtoupper ( $_SERVER ['REQUEST_METHOD'] );

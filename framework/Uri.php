@@ -1,8 +1,7 @@
 <?php
 class frm_Uri extends frm_Baseobject{
     public $controllername = 'IndexController';
-    public $functionname = 'indexAction';
-
+    public $actionname = 'indexAction';
 
     public function __construct(){
         if(strpos($_SERVER['REQUEST_URI'], '?') === FALSE){
@@ -13,17 +12,20 @@ class frm_Uri extends frm_Baseobject{
         }
         if(empty($request_uri[1]) && empty($request_uri[2])){
             $this->controllername = 'IndexController';
-            $this->functionname = "indexAction";
+            $this->actionname = "indexAction";
         }else{
             $this->controllername = strtolower($request_uri[1]) == 'index.php' ? 'IndexController' : ucfirst($request_uri[1]).'Controller';
-            $this->functionname = empty($request_uri[2]) ? 'indexAction' : $request_uri[2] . 'Action';
+            $this->actionname = empty($request_uri[2]) ? 'indexAction' : $request_uri[2] . 'Action';
         }
+        //note 处理path
         if(count($request_uri) > 2){
+            $urlargs = array();
             for($i=3;$i<count($request_uri);$i++){
-                if(!empty($request_uri[$i])){
-                    frm_Request::setVar('urlpath_' . ($i-3), urldecode($request_uri[$i]), 'get');
+                if($request_uri[$i]){
+                    $urlargs[] = urldecode($request_uri[$i]);
                 }
             }
+            frm_Request::setVar('urlargs', $urlargs, 'get');
         }
     }
 
@@ -32,12 +34,12 @@ class frm_Uri extends frm_Baseobject{
         if(file_exists(APP_PATH . "/application/controller/{$this->controllername}.php")){
             $controlClass = new ReflectionClass ( 'app_controller_' . $this->controllername );
             $controllerObj = $controlClass->newInstance();
-            if(method_exists($controllerObj, $this->functionname)){
+            if(method_exists($controllerObj, $this->actionname)){
                 frm_Request::setVar('controllername', $this->controllername, 'system');
-                frm_Request::setVar('functionname', $this->functionname, 'system');
+                frm_Request::setVar('actionname', $this->actionname, 'system');
                 return $controllerObj;
             }else{
-                exit("控制器{$this->controllername}的{$this->functionname}不存在！");
+                exit("控制器{$this->controllername}的{$this->actionname}不存在！");
             }
         }else{
             exit("控制器{$this->controllername}不存在！");

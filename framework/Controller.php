@@ -1,8 +1,6 @@
 <?php
 class frm_Controller extends frm_Baseobject{
-    public function __construct(){
-        
-    }
+    public function __construct(){}
 
     public function GetFilterList($function){
         return array('in'=>array(),'out'=>array());
@@ -27,7 +25,13 @@ class frm_Controller extends frm_Baseobject{
         exit;
     }
 
+    public function Display($template = ''){
+        $template_file = APP_PATH . "/extend/Template.php";
+        $templateObj = file_exists($template_file) ? ( new extend_Template() ) : ( new frm_Template() );
+        $templateObj->Display( $template ? $template : $this->GetTemplate() );
+    }
+
     public function GetTemplate(){
-        return strtolower(frm_Request::getVar('controllername','system') . "_" . frm_Request::getVar('functionname','system') . ".html");
+        return strtolower(frm_Request::getVar('controllername','system') . "_" . frm_Request::getVar('actionname','system') . ".html");
     }
 }

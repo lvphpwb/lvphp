@@ -20,6 +20,14 @@ class frm_Template extends frm_Baseobject{
     	$this->templatecacheDir = frm_Config::getConfig('templatecache_dir') ? frm_Config::getConfig('templatecache_dir') : APP_PATH . "/application/template_c/";
     }
 
+    public function setTemplateDir($dir){
+        $this->templateDir = $dir;
+    }
+
+    public function setTemplateCacheDir($dir){
+        $this->templatecacheDir = $dir;
+    }
+
     public function Display($templatefile){
 		$this->templateFile = $this->templateDir . $templatefile;
 		$this->templateTPL = $this->templatecacheDir . $templatefile;
@@ -34,7 +42,6 @@ class frm_Template extends frm_Baseobject{
             }
         }
 		include_once $this->templateTPL;
-		exit();
 	}
 
     private function creatTemplateTPL(){
@@ -58,7 +65,7 @@ class frm_Template extends frm_Baseobject{
 		}
 		$templateContent = preg_replace("/\{if\s+(.+?)\}/ies", "\$this->stripvTag('<?php if(\\1) { ?>')", $templateContent);//替换if标签
 		$templateContent = preg_replace("/\{include\s+(.*?)\}/is", "<?php include \\1; ?>", $templateContent);//替换include标签
-		$templateContent = preg_replace("/\{template\s+(\w+?)\}/is", '<?php $this->Layout("\\1"); ?>', $templateContent);//替换template标签
+		$templateContent = preg_replace("/\{template\s+(.*?)\}/is", '<?php $this->Layout("\\1"); ?>', $templateContent);//替换template标签
         $templateContent = preg_replace("/\{pluginid\s+id=(\d+?)\}/is", '<?php $this->ShowPlugin("\\1"); ?>', $templateContent);//替换插件标签
 		$templateContent = preg_replace("/\{else\}/is", "<?php } else { ?>", $templateContent);//替换else标签
 		$templateContent = preg_replace("/\{\/if\}/is", "<?php } ?>", $templateContent);//替换/if标签
@@ -68,7 +75,7 @@ class frm_Template extends frm_Baseobject{
 		$templateContent = "<?php if(!defined('APP_PATH')) exit('Access Denied');?>\r\n$templateContent";
 		return $templateContent;
 	}
-    
+
     private function loopSection($arr, $key, $v, $content) {
 		$arr = preg_replace("/$this->vtag_regexp/is", "\\1", str_replace("\\\"", '"', $arr));
 		$key = preg_replace("/$this->vtag_regexp/is", "\\1", str_replace("\\\"", '"', $key));
