@@ -1,6 +1,6 @@
 <?php
 class frm_Controller extends frm_Baseobject{
-    private $templatefile = "";
+    public $templatefile = "";
     public function __construct(){
         $this->SetTemplate();
     }
